@@ -23,8 +23,7 @@ app.post("/message", (req, res) => {
     const {message, name} = req.body
     console.log(`Received message: ${name} ${message}`);
     allMessages.push({
-        name: name,
-        message: message
+         name,message
     })
     console.log(allMessages)
     res.send({
