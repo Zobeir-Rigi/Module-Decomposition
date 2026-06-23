@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 app.use(express.json())
 
-const AllMessages = [
+const allMessages = [
     {
         name: "Saeid",
         message: "Hi, How are you?"
@@ -10,10 +10,10 @@ const AllMessages = [
 ]
 
 const fetchAllMessages = () => {
-    return AllMessages
+    return allMessages
 }
 
-app.get("/", (req, res) => {
+app.get("/message", (req, res) => {
     const messages = fetchAllMessages()
     res.json(messages)
 })
@@ -22,6 +22,11 @@ app.post("/message", (req, res) => {
 
     const {message, name} = req.body
     console.log(`Received message: ${name} ${message}`);
+    allMessages.push({
+        name: name,
+        message: message
+    })
+    console.log(allMessages)
     res.send({
         status: "success",
         message: message,
