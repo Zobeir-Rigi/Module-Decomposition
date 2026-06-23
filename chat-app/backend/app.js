@@ -1,14 +1,10 @@
 const WebSocket = require("ws");
 const express = require("express");
+
 const app = express();
 app.use(express.json())
 
-const allMessages = [
-    {
-        name: "Saeid",
-        message: "Hi, How are you?"
-    },
-]
+const allMessages = []
 
 const fetchAllMessages = () => {
     return allMessages
@@ -23,16 +19,18 @@ const clients = [];
 app.post("/message", (req, res) => {
 
     const {message, name} = req.body
+    const timestamp = new Date();
     console.log(`Received message: ${name} ${message}`);
     allMessages.push({
-         name,message
+         name, message, timestamp
     })
     console.log(allMessages)
 
     clients.forEach(client =>{
         client.send(JSON.stringify({
             name,
-            message
+            message,
+            timestamp
         }))
     })
 
@@ -54,6 +52,7 @@ app.post("/message", (req, res) => {
 
 // we need to create a server manually
 const http = require("http");
+const { time } = require("console");
 const server = http.createServer(app);
 
 server.listen("3000", () => {
