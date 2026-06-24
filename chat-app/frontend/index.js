@@ -46,7 +46,7 @@ fetchMessages()
                 "Content-Type" : "application/json",
         },
         body: JSON.stringify({
-            name : name,
+            name,
             message : msg
         })
     })
