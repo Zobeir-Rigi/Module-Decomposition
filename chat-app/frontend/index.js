@@ -6,8 +6,18 @@ const fetchMessages = async () => {
         const data = await response.json()
         console.log(data)
 
+
         const messages = document.getElementById("messages")
         messages.innerHTML = ""; // avoid duplicatin when u need to call func again
+
+        if (data.length === 0) {
+            const noData = document.createElement("div")
+            noData.textContent = "There is no chat yet ..."
+            noData.classList.add("empty")
+
+            messages.appendChild(noData)
+            return;
+        }
 
         data.forEach((e) => {
             const div = document.createElement("div")
@@ -21,7 +31,10 @@ const fetchMessages = async () => {
             div.appendChild(message)
 
             const timestamp = document.createElement("small")
-            timestamp.textContent = e.timestamp
+            timestamp.textContent = new Date(e.timestamp).toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit"
+            });
             div.appendChild(timestamp)
 
             messages.appendChild(div)
@@ -35,11 +48,12 @@ const fetchMessages = async () => {
 fetchMessages()
 
 const sendMessage = async () => {
-    const name = document.getElementById("user").value
-    const msg = document.getElementById("msg").value
+    const name = document.getElementById("user").value.trim()
+    const msg = document.getElementById("msg").value.trim()
+
     const url = "http://localhost:3000/message"
 
-    await fetch(url, {
+    const res = await fetch(url, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -50,19 +64,40 @@ const sendMessage = async () => {
         })
     })
 
+    let data;
+    try {
+        data = await res.json();
+    } catch {
+        data = {};
+    }
+    if (!res.ok) {
+        showError(data.error);
+        return;
+    }
+
+    document.getElementById("error").textContent = "";
+
     // fetchMessages() instead webSocket 
     document.getElementById("user").value = ""
     document.getElementById("msg").value = ""
 }
-
+const showError = (msg) => {
+    const errorEl = document.getElementById("error");
+    errorEl.textContent = msg;
+    errorEl.style.color = "red";
+};
 
 const ws = new WebSocket("ws://localhost:3000");
 
 ws.onmessage = (event) => {
     const data = JSON.parse(event.data);
-    console.log(data);
 
     const messages = document.getElementById("messages");
+
+    const empty = document.querySelector(".empty");
+    if (empty) {
+        empty.remove();
+    }
 
     const div = document.createElement("div");
 
@@ -72,12 +107,15 @@ ws.onmessage = (event) => {
     const messageEl = document.createElement("p");
     messageEl.textContent = data.message;
 
-    const timeEl = document.createElement("small");
-    timeEl.textContent = data.timestamp;
+    const timestamp = document.createElement("small");
+    timestamp.textContent = new Date(data.timestamp).toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit"
+    });
 
     div.appendChild(nameEl);
     div.appendChild(messageEl);
-    div.appendChild(timeEl);
+    div.appendChild(timestamp);
 
     messages.appendChild(div);
 };
