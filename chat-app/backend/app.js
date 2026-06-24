@@ -37,7 +37,8 @@ app.post("/message", (req, res) => {
     res.send({
         status: "success",
         message: message,
-        name: name
+        name: name,
+        timestamp: timestamp
     })
 
 })
@@ -52,10 +53,9 @@ app.post("/message", (req, res) => {
 
 // we need to create a server manually
 const http = require("http");
-const { time } = require("console");
 const server = http.createServer(app);
 
-server.listen("3000", () => {
+server.listen(3000, () => {
     console.log("server is running in this port")
 })
 //Then create the WebSocket server:
