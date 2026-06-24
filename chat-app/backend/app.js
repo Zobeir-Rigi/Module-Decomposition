@@ -2,7 +2,6 @@ const WebSocket = require("ws");
 const express = require("express");
 const cors = require('cors');
 
-
 const app = express();
 app.use(express.json())
 app.use(cors());
@@ -19,9 +18,15 @@ app.get("/messages", (req, res) => {
 })
 
 const clients = [];
-app.post("/message", (req, res) => {
 
+app.post("/message", (req, res) => {
     const { message, name } = req.body
+
+    if(!message.trim() || !name.trim()){
+        return res.status(400).json({
+            error: "Name and message are required"
+        })
+    }
     const timestamp = new Date();
     console.log(`Received message: ${name} ${message}`);
     allMessages.push({
@@ -45,12 +50,6 @@ app.post("/message", (req, res) => {
     })
 
 })
-
-// app.listen("3000", () => {
-//     console.log("server is running in this port")
-// })
-// Replace app.listen with http.createServer
-
 
 //webSocket
 
