@@ -4,11 +4,9 @@ const fetchMessages = async () => {
     try {
         const response = await fetch(url);
         const data = await response.json()
-        console.log(data)
-
 
         const messages = document.getElementById("messages")
-        messages.innerHTML = ""; // avoid duplicatin when u need to call func again
+        messages.innerHTML = "";
 
         if (data.length === 0) {
             const noData = document.createElement("div")
@@ -35,8 +33,8 @@ const fetchMessages = async () => {
                 hour: "2-digit",
                 minute: "2-digit"
             });
-            div.appendChild(timestamp)
 
+            div.appendChild(timestamp)
             messages.appendChild(div)
         }
         )
@@ -64,16 +62,16 @@ const sendMessage = async () => {
         })
     })
 
-    let data;
-    try {
-        data = await res.json();
-    } catch {
-        data = {};
-    }
-    if (!res.ok) {
-        showError(data.error);
-        return;
-    }
+        let data;
+        try {
+            data = await res.json();
+        } catch {
+            data = {};
+        }
+        if (!res.ok) {
+            showError(data.error);
+            return;
+        }
 
     document.getElementById("error").textContent = "";
 
@@ -81,6 +79,7 @@ const sendMessage = async () => {
     document.getElementById("user").value = ""
     document.getElementById("msg").value = ""
 }
+
 const showError = (msg) => {
     const errorEl = document.getElementById("error");
     errorEl.textContent = msg;
