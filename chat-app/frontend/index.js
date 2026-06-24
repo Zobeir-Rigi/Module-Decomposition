@@ -33,26 +33,51 @@ const fetchMessages = async () => {
 }
 
 fetchMessages()
- // send a message 
 
- const sendMessage = async () => {
+const sendMessage = async () => {
     const name = document.getElementById("user").value
     const msg = document.getElementById("msg").value
     const url = "http://localhost:3000/message"
 
-     await fetch(url, {
+    await fetch(url, {
         method: "POST",
         headers: {
-                "Content-Type" : "application/json",
+            "Content-Type": "application/json",
         },
         body: JSON.stringify({
             name,
-            message : msg
+            message: msg
         })
     })
 
-    fetchMessages()
+    // fetchMessages() instead webSocket 
     document.getElementById("user").value = ""
     document.getElementById("msg").value = ""
- }
+}
 
+
+const ws = new WebSocket("ws://localhost:3000");
+
+ws.onmessage = (event) => {
+    const data = JSON.parse(event.data);
+    console.log(data);
+
+    const messages = document.getElementById("messages");
+
+    const div = document.createElement("div");
+
+    const nameEl = document.createElement("div");
+    nameEl.textContent = data.name;
+
+    const messageEl = document.createElement("p");
+    messageEl.textContent = data.message;
+
+    const timeEl = document.createElement("span");
+    timeEl.textContent = data.timestamp;
+
+    div.appendChild(nameEl);
+    div.appendChild(messageEl);
+    div.appendChild(timeEl);
+
+    messages.appendChild(div);
+};
