@@ -50,5 +50,9 @@ fetchMessages()
             message : msg
         })
     })
+
+    fetchMessages()
+    document.getElementById("user").value = ""
+    document.getElementById("msg").value = ""
  }
 
