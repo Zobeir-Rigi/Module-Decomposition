@@ -1,8 +1,11 @@
 const WebSocket = require("ws");
 const express = require("express");
+const cors = require('cors');
+
 
 const app = express();
 app.use(express.json())
+app.use(cors());
 
 const allMessages = []
 
@@ -18,15 +21,15 @@ app.get("/messages", (req, res) => {
 const clients = [];
 app.post("/message", (req, res) => {
 
-    const {message, name} = req.body
+    const { message, name } = req.body
     const timestamp = new Date();
     console.log(`Received message: ${name} ${message}`);
     allMessages.push({
-         name, message, timestamp
+        name, message, timestamp
     })
     console.log(allMessages)
 
-    clients.forEach(client =>{
+    clients.forEach(client => {
         client.send(JSON.stringify({
             name,
             message,
