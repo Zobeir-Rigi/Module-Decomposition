@@ -12,7 +12,7 @@ const fetchMessages = async () => {
         data.forEach((e) => {
             const div = document.createElement("div")
 
-            const userName = document.createElement("div")
+            const userName = document.createElement("strong")
             userName.textContent = e.name
             div.appendChild(userName)
 
@@ -20,7 +20,7 @@ const fetchMessages = async () => {
             message.textContent = e.message
             div.appendChild(message)
 
-            const timestamp = document.createElement("span")
+            const timestamp = document.createElement("small")
             timestamp.textContent = e.timestamp
             div.appendChild(timestamp)
 
@@ -66,13 +66,13 @@ ws.onmessage = (event) => {
 
     const div = document.createElement("div");
 
-    const nameEl = document.createElement("div");
+    const nameEl = document.createElement("strong");
     nameEl.textContent = data.name;
 
     const messageEl = document.createElement("p");
     messageEl.textContent = data.message;
 
-    const timeEl = document.createElement("span");
+    const timeEl = document.createElement("small");
     timeEl.textContent = data.timestamp;
 
     div.appendChild(nameEl);
