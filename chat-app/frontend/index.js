@@ -33,4 +33,22 @@ const fetchMessages = async () => {
 }
 
 fetchMessages()
+ // send a message 
+
+ const sendMessage = async () => {
+    const name = document.getElementById("user").value
+    const msg = document.getElementById("msg").value
+    const url = "http://localhost:3000/message"
+
+     await fetch(url, {
+        method: "POST",
+        headers: {
+                "Content-Type" : "application/json",
+        },
+        body: JSON.stringify({
+            name : name,
+            message : msg
+        })
+    })
+ }
 
