@@ -1,5 +1,5 @@
 const fetchMessages = async () => {
-    const url = "http://localhost:3000/messages"
+    const url = "https://pp3psp4mxrlip4uxvmeb9cmv.hosting.codeyourfuture.io/messages"
 
     try {
         const response = await fetch(url);
@@ -49,7 +49,7 @@ const sendMessage = async () => {
     const name = document.getElementById("user").value.trim()
     const msg = document.getElementById("msg").value.trim()
 
-    const url = "http://localhost:3000/message"
+    const url = "https://pp3psp4mxrlip4uxvmeb9cmv.hosting.codeyourfuture.io/message"
 
     const res = await fetch(url, {
         method: "POST",
@@ -86,8 +86,8 @@ const showError = (msg) => {
     errorEl.style.color = "red";
 };
 
-const ws = new WebSocket("ws://localhost:3000");
-
+const ws = new
+WebSocket("wss://pp3psp4mxrlip4uxvmeb9cmv.hosting.codeyourfuture.io");
 ws.onmessage = (event) => {
     const data = JSON.parse(event.data);
 
