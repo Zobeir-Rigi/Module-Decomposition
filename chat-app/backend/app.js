@@ -1,6 +1,7 @@
 const WebSocket = require("ws");
 const express = require("express");
 const cors = require('cors');
+const clients = [];
 
 const app = express();
 app.use(express.json())
@@ -17,12 +18,18 @@ app.get("/messages", (req, res) => {
     res.json(messages)
 })
 
-const clients = [];
 
 app.post("/message", (req, res) => {
-    const { message, name } = req.body
 
-    if (!message.trim() || !name.trim()) {
+    const { message, name } = req.body || {};
+
+    if (
+        !message || !name ||
+        typeof message !== "string" ||
+        typeof name !== "string" ||
+        !message.trim() ||
+        !name.trim()
+    ) {
         return res.status(400).json({
             error: "Name and message are required"
         })
