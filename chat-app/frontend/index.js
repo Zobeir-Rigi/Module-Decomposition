@@ -23,8 +23,8 @@ const renderMessage = (e) => {
     div.appendChild(timestamp)
 
     messages.appendChild(div)
-
 }
+
 const renderEmptyState = () => {
     const messages = document.getElementById("messages");
 
@@ -51,7 +51,7 @@ const fetchMessages = async () => {
         }
         data.forEach(renderMessage)
     } catch {
-        console.log("check the url")
+        showError("Failed to load messages");
     }
 }
 
@@ -62,36 +62,41 @@ const sendMessage = async () => {
     const name = document.getElementById("user").value.trim()
     const msg = document.getElementById("msg").value.trim()
 
-    const url = `${BASE_URL}/message`
-
-    const res = await fetch(url, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-            name,
-            message: msg
-        })
-    })
-
-    let data;
-    try {
-        data = await res.json();
-    } catch {
-        data = {};
-    }
-    if (!res.ok) {
-        showError(data.error);
+    if (!name || !msg) {
+        showError("Name and message are required");
         return;
     }
 
-    document.getElementById("error").textContent = "";
+    const url = `${BASE_URL}/message`
 
-    // fetchMessages() instead webSocket 
-    document.getElementById("user").value = ""
-    document.getElementById("msg").value = ""
+    try {
+        const res = await fetch(url, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                name,
+                message: msg
+            })
+        })
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            showError(data.error);
+            return;
+        }
+        document.getElementById("error").textContent = "";
+
+        document.getElementById("user").value = ""
+        document.getElementById("msg").value = ""
+
+    } catch (err) {
+        showError("Network error");
+    }
 }
+
 const button = document.getElementById("send-button");
 button.addEventListener("click", sendMessage)
 
@@ -101,8 +106,7 @@ const showError = (msg) => {
     errorEl.style.color = "red";
 };
 
-const ws = new
-    WebSocket(WS_URL);
+const ws = new WebSocket(WS_URL);
 ws.onmessage = (event) => {
     const data = JSON.parse(event.data);
 
