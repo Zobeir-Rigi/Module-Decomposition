@@ -45,6 +45,7 @@ const fetchMessages = async () => {
 
 fetchMessages()
 
+
 const sendMessage = async () => {
     const name = document.getElementById("user").value.trim()
     const msg = document.getElementById("msg").value.trim()
@@ -62,16 +63,16 @@ const sendMessage = async () => {
         })
     })
 
-        let data;
-        try {
-            data = await res.json();
-        } catch {
-            data = {};
-        }
-        if (!res.ok) {
-            showError(data.error);
-            return;
-        }
+    let data;
+    try {
+        data = await res.json();
+    } catch {
+        data = {};
+    }
+    if (!res.ok) {
+        showError(data.error);
+        return;
+    }
 
     document.getElementById("error").textContent = "";
 
@@ -79,6 +80,8 @@ const sendMessage = async () => {
     document.getElementById("user").value = ""
     document.getElementById("msg").value = ""
 }
+const button = document.getElementById("send-button");
+button.addEventListener("click", sendMessage)
 
 const showError = (msg) => {
     const errorEl = document.getElementById("error");
@@ -87,7 +90,7 @@ const showError = (msg) => {
 };
 
 const ws = new
-WebSocket("wss://pp3psp4mxrlip4uxvmeb9cmv.hosting.codeyourfuture.io");
+    WebSocket("wss://pp3psp4mxrlip4uxvmeb9cmv.hosting.codeyourfuture.io");
 ws.onmessage = (event) => {
     const data = JSON.parse(event.data);
 
