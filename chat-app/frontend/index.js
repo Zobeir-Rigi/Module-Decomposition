@@ -1,5 +1,8 @@
+const BASE_URL = "https://pp3psp4mxrlip4uxvmeb9cmv.hosting.codeyourfuture.io"
+const WS_URL = "wss://pp3psp4mxrlip4uxvmeb9cmv.hosting.codeyourfuture.io"
+
 const fetchMessages = async () => {
-    const url = "https://pp3psp4mxrlip4uxvmeb9cmv.hosting.codeyourfuture.io/messages"
+    const url = `${BASE_URL}/messages`
 
     try {
         const response = await fetch(url);
@@ -50,7 +53,7 @@ const sendMessage = async () => {
     const name = document.getElementById("user").value.trim()
     const msg = document.getElementById("msg").value.trim()
 
-    const url = "https://pp3psp4mxrlip4uxvmeb9cmv.hosting.codeyourfuture.io/message"
+    const url = `${BASE_URL}/message`
 
     const res = await fetch(url, {
         method: "POST",
@@ -90,7 +93,7 @@ const showError = (msg) => {
 };
 
 const ws = new
-    WebSocket("wss://pp3psp4mxrlip4uxvmeb9cmv.hosting.codeyourfuture.io");
+    WebSocket(WS_URL);
 ws.onmessage = (event) => {
     const data = JSON.parse(event.data);
 
