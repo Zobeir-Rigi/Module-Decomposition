@@ -39,7 +39,6 @@ app.post("/message", (req, res) => {
     allMessages.push({
         name, message, timestamp
     })
-    console.log(allMessages)
 
     clients.forEach(client => {
         client.send(JSON.stringify({
