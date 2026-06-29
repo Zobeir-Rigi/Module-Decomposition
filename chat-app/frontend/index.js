@@ -1,6 +1,40 @@
 const BASE_URL = "https://pp3psp4mxrlip4uxvmeb9cmv.hosting.codeyourfuture.io"
 const WS_URL = "wss://pp3psp4mxrlip4uxvmeb9cmv.hosting.codeyourfuture.io"
 
+const renderMessage = (e) => {
+    const messages = document.getElementById("messages")
+
+    const div = document.createElement("div")
+
+    const userName = document.createElement("strong")
+    userName.textContent = e.name
+
+    const message = document.createElement("p")
+    message.textContent = e.message
+
+    const timestamp = document.createElement("small")
+    timestamp.textContent = new Date(e.timestamp).toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit"
+    });
+
+    div.appendChild(userName)
+    div.appendChild(message)
+    div.appendChild(timestamp)
+
+    messages.appendChild(div)
+
+}
+const renderEmptyState = () => {
+    const messages = document.getElementById("messages");
+
+    const noData = document.createElement("div");
+    noData.textContent = "There is no chat yet ...";
+    noData.classList.add("empty");
+
+    messages.appendChild(noData);
+}
+
 const fetchMessages = async () => {
     const url = `${BASE_URL}/messages`
 
@@ -12,35 +46,10 @@ const fetchMessages = async () => {
         messages.innerHTML = "";
 
         if (data.length === 0) {
-            const noData = document.createElement("div")
-            noData.textContent = "There is no chat yet ..."
-            noData.classList.add("empty")
-
-            messages.appendChild(noData)
+            renderEmptyState()
             return;
         }
-
-        data.forEach((e) => {
-            const div = document.createElement("div")
-
-            const userName = document.createElement("strong")
-            userName.textContent = e.name
-            div.appendChild(userName)
-
-            const message = document.createElement("p")
-            message.textContent = e.message
-            div.appendChild(message)
-
-            const timestamp = document.createElement("small")
-            timestamp.textContent = new Date(e.timestamp).toLocaleTimeString([], {
-                hour: "2-digit",
-                minute: "2-digit"
-            });
-
-            div.appendChild(timestamp)
-            messages.appendChild(div)
-        }
-        )
+        data.forEach(renderMessage)
     } catch {
         console.log("check the url")
     }
@@ -97,30 +106,9 @@ const ws = new
 ws.onmessage = (event) => {
     const data = JSON.parse(event.data);
 
-    const messages = document.getElementById("messages");
-
     const empty = document.querySelector(".empty");
     if (empty) {
         empty.remove();
     }
-
-    const div = document.createElement("div");
-
-    const nameEl = document.createElement("strong");
-    nameEl.textContent = data.name;
-
-    const messageEl = document.createElement("p");
-    messageEl.textContent = data.message;
-
-    const timestamp = document.createElement("small");
-    timestamp.textContent = new Date(data.timestamp).toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit"
-    });
-
-    div.appendChild(nameEl);
-    div.appendChild(messageEl);
-    div.appendChild(timestamp);
-
-    messages.appendChild(div);
+    renderMessage(data)
 };
