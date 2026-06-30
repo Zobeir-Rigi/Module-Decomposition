@@ -29,7 +29,7 @@ const renderEmptyState = () => {
     const messages = document.getElementById("messages");
 
     const noData = document.createElement("div");
-    noData.textContent = "There is no chat yet ...";
+    noData.textContent = "There are no chat yet ...";
     noData.classList.add("empty");
 
     messages.appendChild(noData);
@@ -54,8 +54,6 @@ const fetchMessages = async () => {
         showError("Failed to load messages");
     }
 }
-
-fetchMessages()
 
 
 const sendMessage = async () => {
@@ -97,9 +95,6 @@ const sendMessage = async () => {
     }
 }
 
-const button = document.getElementById("send-button");
-button.addEventListener("click", sendMessage)
-
 const showError = (msg) => {
     const errorEl = document.getElementById("error");
     errorEl.textContent = msg;
@@ -116,3 +111,12 @@ ws.onmessage = (event) => {
     }
     renderMessage(data)
 };
+
+const init = () => {
+    fetchMessages();
+
+    const button = document.getElementById("send-button");
+    button.addEventListener("click", sendMessage);
+};
+
+init();
