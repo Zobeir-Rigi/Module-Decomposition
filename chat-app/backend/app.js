@@ -80,6 +80,34 @@ app.delete("/messages/:id", (req, res) => {
     res.status(200).json(deleteMessage)
 })
 
+app.put("/messages/:id", (req, res) => {
+    const id = Number(req.params.id)
+    const message = findMessageById(id)
+
+    if (!message) {
+        return res.status(404).json({
+            error: "Message not found"
+        })
+    }
+    const { message: updatedMessage, name: updatedName } = req.body || {}
+
+    if (
+        typeof updatedMessage !== "string" ||
+        !updatedMessage.trim() ||
+        typeof updatedName !== "string" ||
+        !updatedName.trim()
+    ) {
+        return res.status(400).json({
+            error: "Name and message are required"
+        });
+    }
+
+    message.message = updatedMessage;
+    message.name = updatedName
+    res.status(200).json(message);
+
+})
+
 app.listen(3000, () => {
     console.log("server is running")
 })
