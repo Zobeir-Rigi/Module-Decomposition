@@ -1,7 +1,7 @@
-const WebSocket = require("ws");
+// const WebSocket = require("ws");
 const express = require("express");
 const cors = require('cors');
-const clients = [];
+// const clients = [];
 
 const app = express();
 app.use(express.json())
@@ -18,10 +18,20 @@ app.get("/messages", (req, res) => {
     res.json(messages)
 })
 
+let messageId = 0
+const createMessage = (name, message) => {
+    return {
+        id: messageId++,
+        name,
+        message,
+        timestamp: new Date(),
+        likes: 0,
+        dislikes: 0
+    }
+}
 
 app.post("/message", (req, res) => {
-
-    const { message, name } = req.body || {};
+    const { name, message } = req.body || {};
 
     if (
         !message || !name ||
@@ -34,27 +44,12 @@ app.post("/message", (req, res) => {
             error: "Name and message are required"
         })
     }
-    const timestamp = new Date();
-    console.log(`Received message: ${name} ${message}`);
-    allMessages.push({
-        name, message, timestamp
-    })
+    const newMessage = createMessage(name, message)
 
-    clients.forEach(client => {
-        client.send(JSON.stringify({
-            name,
-            message,
-            timestamp
-        }))
-    })
+    allMessages.push(newMessage)
 
-    res.send({
-        status: "success",
-        message: message,
-        name: name,
-        timestamp: timestamp
-    })
-
+    res.status(201).json(newMessage);
+    // 201 Created : The request succeeded and a new resource was created.
 })
 
 app.delete("/messages", (req, res) => {
@@ -66,33 +61,56 @@ app.delete("/messages", (req, res) => {
     });
 });
 
-// app.listen(3000, ()=>{
-//     console.log("server is running")
-// })
+app.delete("/messages/:id", (req, res) => {
+
+    const id = Number(req.params.id)
+    const message = findMessageById(id)
+
+    if (!message) {
+        return res.status(404).json({
+            error: "Message not found"
+        })
+    }
+
+    const messageIndex = allMessages.findIndex(
+        message => message.id === id
+    );
+
+    const deleteMessage = allMessages.splice(messageIndex, 1)[0];
+    res.status(200).json(deleteMessage)
+})
+
+app.listen(3000, () => {
+    console.log("server is running")
+})
+
+const findMessageById = (id) => {
+    return allMessages.find(message => message.id === id)
+}
 
 //webSocket
 
-const http = require("http");
-const server = http.createServer(app);
+// const http = require("http");
+// const server = http.createServer(app);
 
-const PORT = process.env.PORT || 3000;
+// const PORT = process.env.PORT || 3000;
 
-server.listen(PORT, () => {
-    console.log("server is running");
-});
+// server.listen(PORT, () => {
+//     console.log("server is running");
+// });
 
 
-const wss = new WebSocket.Server({ server });
+// const wss = new WebSocket.Server({ server });
 
-wss.on("connection", (ws) => {
-    console.log("New client connected");
-    clients.push(ws);
+// wss.on("connection", (ws) => {
+//     console.log("New client connected");
+//     clients.push(ws);
 
-    ws.on("close", () => {
-        console.log("Client disconnected");
-        const index = clients.indexOf(ws);
-        clients.splice(index, 1);
-    });
+//     ws.on("close", () => {
+//         console.log("Client disconnected");
+//         const index = clients.indexOf(ws);
+//         clients.splice(index, 1);
+//     });
 
-});
+// });
 
