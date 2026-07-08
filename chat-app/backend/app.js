@@ -61,23 +61,22 @@ app.delete("/messages", (req, res) => {
 });
 
 app.delete("/messages/:id", (req, res) => {
-
-    const id = Number(req.params.id)
-    const message = findMessageById(id)
-
-    if (!message) {
-        return res.status(404).json({
-            error: "Message not found"
-        })
-    }
+    const id = Number(req.params.id);
 
     const messageIndex = allMessages.findIndex(
         message => message.id === id
     );
 
-    const deleteMessage = allMessages.splice(messageIndex, 1)[0];
-    res.status(200).json(deleteMessage)
-})
+    if (messageIndex === -1) {
+        return res.status(404).json({
+            error: "Message not found"
+        });
+    }
+
+    const deletedMessage = allMessages.splice(messageIndex, 1)[0];
+
+    res.status(200).json(deletedMessage);
+});
 
 app.put("/messages/:id", (req, res) => {
     const id = Number(req.params.id)
