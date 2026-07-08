@@ -18,19 +18,18 @@ app.get("/messages", (req, res) => {
     res.json(messages)
 })
 
-let messageId = 0
+let messageId = 1
 const createMessage = (name, message) => {
     return {
         id: messageId++,
         name,
         message,
         timestamp: new Date(),
-        likes: 0,
-        dislikes: 0
+        likes: []
     }
 }
 
-app.post("/message", (req, res) => {
+app.post("/messages", (req, res) => {
     const { name, message } = req.body || {};
 
     if (
@@ -108,13 +107,49 @@ app.put("/messages/:id", (req, res) => {
 
 })
 
-app.listen(3000, () => {
-    console.log("server is running")
-})
+app.post("/messages/:id/like", (req, res) => {
+    const id = Number(req.params.id);
+    const { name } = req.body || {};
 
+    if (
+        typeof name !== "string" ||
+        !name.trim()
+    ) {
+        return res.status(400).json({
+            error: "Name is required"
+        });
+    }
+
+    const message = findMessageById(id);
+
+    if (!message) {
+        return res.status(404).json({
+            error: "Message not found"
+        });
+    }
+
+    const hasLiked = message.likes.includes(name);
+
+    if (hasLiked) {
+        message.likes = message.likes.filter(
+            user => user !== name
+        );
+    } else {
+        message.likes.push(name);
+    }
+
+    res.status(200).json({
+        ...message,
+        likesCount: message.likes.length
+    });
+});
 const findMessageById = (id) => {
-    return allMessages.find(message => message.id === id)
+   return allMessages.find(message => message.id === id)
 }
+
+app.listen(3000, () => {
+   console.log("server is running")
+})
 
 //webSocket
 
