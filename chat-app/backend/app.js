@@ -57,6 +57,19 @@ app.post("/message", (req, res) => {
 
 })
 
+app.delete("/messages", (req, res) => {
+    allMessages.length = 0;
+
+    res.status(200).json({
+        success: true,
+        message: "Chat cleared"
+    });
+});
+
+// app.listen(3000, ()=>{
+//     console.log("server is running")
+// })
+
 //webSocket
 
 const http = require("http");
@@ -82,3 +95,4 @@ wss.on("connection", (ws) => {
     });
 
 });
+

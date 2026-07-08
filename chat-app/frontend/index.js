@@ -1,9 +1,11 @@
-const BASE_URL = "https://pp3psp4mxrlip4uxvmeb9cmv.hosting.codeyourfuture.io"
-const WS_URL = "wss://pp3psp4mxrlip4uxvmeb9cmv.hosting.codeyourfuture.io"
+// const BASE_URL = "https://pp3psp4mxrlip4uxvmeb9cmv.hosting.codeyourfuture.io"
+// const WS_URL = "wss://pp3psp4mxrlip4uxvmeb9cmv.hosting.codeyourfuture.io"
+const BASE_URL = "http://localhost:3000"
+const WS_URL = "ws://localhost:3000";
 
 const renderMessage = (e) => {
     const messages = document.getElementById("messages")
-
+    console.log(e)
     const div = document.createElement("div")
 
     const userName = document.createElement("strong")
@@ -36,10 +38,10 @@ const renderEmptyState = () => {
 }
 
 const fetchMessages = async () => {
-    const url = `${BASE_URL}/messages`
+    // const url = `${BASE_URL}/messages`
 
     try {
-        const response = await fetch(url);
+        const response = await fetch("http://localhost:3000/messages");
         const data = await response.json()
 
         const messages = document.getElementById("messages")
@@ -65,10 +67,12 @@ const sendMessage = async () => {
         return;
     }
 
-    const url = `${BASE_URL}/message`
+    // const url = `${BASE_URL}/message`
+    
+
 
     try {
-        const res = await fetch(url, {
+        const res = await fetch("http://localhost:3000/message", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -112,11 +116,44 @@ ws.onmessage = (event) => {
     renderMessage(data)
 };
 
+const clearChat = async () => {
+    try {
+        const response = await fetch(`${BASE_URL}/messages`, {
+            method: "DELETE"
+        });
+
+        const data = await response.json();
+        console.log(data);
+
+        if (!response.ok) {
+            throw new Error(data.message);
+        }
+        console.log(data);
+
+        const messages = document.getElementById("messages");
+        messages.innerHTML = "";
+
+        renderEmptyState();
+
+    } catch {
+        showError(err.message || "Failed to clear chat");
+    }
+};
+
+const clearChatBut = document.getElementById("clear-allMessages");
+clearChatBut.addEventListener("click", clearChat);
+
 const init = () => {
     fetchMessages();
 
     const button = document.getElementById("send-button");
     button.addEventListener("click", sendMessage);
+
+
+        document
+        .getElementById("clear-allMessages")
+        .addEventListener("click", clearChat)
+
 };
 
 init();
