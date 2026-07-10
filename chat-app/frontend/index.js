@@ -19,10 +19,17 @@ const renderMessage = (e) => {
         hour: "2-digit",
         minute: "2-digit"
     });
+    //Because each message gets its own Edit button:
+    const editBut = document.createElement("button")
+    editBut.textContent = "Edit"
+    editBut.addEventListener("click", () => {
+    editMessage(e);
+});
 
     div.appendChild(userName)
     div.appendChild(message)
     div.appendChild(timestamp)
+    div.appendChild(editBut)
 
     messages.appendChild(div)
 }
@@ -72,7 +79,7 @@ const sendMessage = async () => {
 
 
     try {
-        const res = await fetch("http://localhost:3000/message", {
+        const res = await fetch("http://localhost:3000/messages", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -142,6 +149,44 @@ const clearChat = async () => {
 
 const clearChatBut = document.getElementById("clear-allMessages");
 clearChatBut.addEventListener("click", clearChat);
+
+const editMessage = async (messageData) => {
+    const updatedMessage = prompt(
+        "Edit your message",
+        messageData.message
+    );
+
+    if (!updatedMessage) {
+        return;
+    }
+
+    try {
+        const response = await fetch(
+            `${BASE_URL}/messages/${messageData.id}`,
+            {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    message: updatedMessage
+                })
+            }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            showError(data.error);
+            return;
+        }
+
+        fetchMessages();
+
+    } catch {
+        showError("Failed to update message");
+    }
+};
 
 const init = () => {
     fetchMessages();

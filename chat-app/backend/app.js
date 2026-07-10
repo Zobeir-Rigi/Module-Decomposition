@@ -87,13 +87,11 @@ app.put("/messages/:id", (req, res) => {
             error: "Message not found"
         })
     }
-    const { message: updatedMessage, name: updatedName } = req.body || {}
+    const { message: updatedMessage } = req.body || {}
 
     if (
         typeof updatedMessage !== "string" ||
-        !updatedMessage.trim() ||
-        typeof updatedName !== "string" ||
-        !updatedName.trim()
+        !updatedMessage.trim()
     ) {
         return res.status(400).json({
             error: "Name and message are required"
@@ -101,7 +99,6 @@ app.put("/messages/:id", (req, res) => {
     }
 
     message.message = updatedMessage;
-    message.name = updatedName
     res.status(200).json(message);
 
 })
