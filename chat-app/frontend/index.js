@@ -22,14 +22,17 @@ const renderMessage = (e) => {
     //Because each message gets its own Edit button:
     const editBut = document.createElement("button")
     editBut.textContent = "Edit"
-    editBut.addEventListener("click", () => {
-    editMessage(e);
-});
+    editBut.addEventListener("click", () => editMessage(e) )
+
+    const deleteBut = document.createElement("button")
+    deleteBut.textContent = "Delete"
+    deleteBut.addEventListener("click",() => deleteMessage(e.id))
 
     div.appendChild(userName)
     div.appendChild(message)
     div.appendChild(timestamp)
     div.appendChild(editBut)
+    div.appendChild(deleteBut)
 
     messages.appendChild(div)
 }
@@ -76,8 +79,6 @@ const sendMessage = async () => {
 
     // const url = `${BASE_URL}/message`
     
-
-
     try {
         const res = await fetch("http://localhost:3000/messages", {
             method: "POST",
@@ -185,6 +186,29 @@ const editMessage = async (messageData) => {
 
     } catch {
         showError("Failed to update message");
+    }
+};
+
+const deleteMessage = async (id) => {
+    try {
+        const response = await fetch(
+            `${BASE_URL}/messages/${id}`,
+            {
+                method: "DELETE"
+            }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            showError(data.error);
+            return;
+        }
+//We don't fetch data because we need the data. We fetch again to refresh the UI.
+        fetchMessages();
+
+    } catch {
+        showError("Failed to delete message");
     }
 };
 
