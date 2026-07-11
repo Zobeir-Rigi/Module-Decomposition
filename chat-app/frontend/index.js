@@ -22,6 +22,8 @@ const renderMessage = (e) => {
     console.log(e)
     const messageCard = document.createElement("div");
     messageCard.classList.add("message-card");
+    // How do we find the correct HTML element to remove?from the backend to the correct DOM element.
+    messageCard.dataset.id = e.id;
 
     const userName = document.createElement("strong")
     userName.textContent = e.name
@@ -145,15 +147,51 @@ const ws = new WebSocket(WS_URL);
 ws.onmessage = (event) => {
     const data = JSON.parse(event.data);
 
-    if (data.type === "NEW_MESSAGE") {
+    switch (data.type) {
 
-        const empty = document.querySelector(".empty");
+        case "NEW_MESSAGE": {
+            const empty = document.querySelector(".empty");
 
-        if (empty) {
-            empty.remove();
+            if (empty) {
+                empty.remove();
+            }
+
+            renderMessage(data.message);
+            break;
         }
 
-        renderMessage(data.message);
+        case "DELETE_MESSAGE": {
+            const messageCard = document.querySelector(
+                `[data-id="${data.messageId}"]`
+            );
+
+            if (messageCard) {
+                messageCard.remove();
+            }
+
+            break;
+        }
+
+        case "EDIT_MESSAGE": {
+            console.log("EDIT_MESSAGE");
+            break;
+        }
+
+        case "LIKE_MESSAGE": {
+            console.log("LIKE_MESSAGE");
+            break;
+        }
+
+        case "CLEAR_CHAT": {
+            console.log("CLEAR_CHAT");
+            break;
+        }
+
+        default:
+            console.warn(
+                "Unknown websocket event:",
+                data.type
+            );
     }
 };
 

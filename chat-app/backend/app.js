@@ -69,6 +69,7 @@ app.delete("/messages/:id", (req, res) => {
 
     const messageIndex = allMessages.findIndex(
         message => message.id === id
+        
     );
 
     if (messageIndex === -1) {
@@ -78,6 +79,11 @@ app.delete("/messages/:id", (req, res) => {
     }
 
     const deletedMessage = allMessages.splice(messageIndex, 1)[0];
+
+    broadcast({
+    type: "DELETE_MESSAGE",
+    messageId: deletedMessage.id
+});
 
     res.status(200).json(deletedMessage);
 });
