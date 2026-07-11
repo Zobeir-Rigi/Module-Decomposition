@@ -2,6 +2,13 @@
 // const WS_URL = "wss://pp3psp4mxrlip4uxvmeb9cmv.hosting.codeyourfuture.io"
 const BASE_URL = "http://localhost:3000"
 const WS_URL = "ws://localhost:3000";
+const currentUser = localStorage.getItem("username");
+
+if (!currentUser) {
+    window.location.href = "index.html";
+}
+document.getElementById("welcome").textContent =
+    `Welcome, ${currentUser}`;
 
 const renderMessage = (e) => {
     const messages = document.getElementById("messages")
@@ -36,8 +43,15 @@ const renderMessage = (e) => {
     const likeBut = document.createElement("button")
     const likeImg = document.createElement("img");
     likeImg.src = "./icons/like.svg"
+    likeImg.alt = "Like"
     likeBut.appendChild(likeImg);
-    // likeBut.addEventListener("click", () => likeMessage(e.id))
+    likeBut.append(` ${e.likes.length}`);
+    likeBut.addEventListener("click", () => likeMessage(e.id))
+
+
+
+    // const likesCount = document.createElement("small");
+    // likesCount.textContent = e.likes.length;
 
     const actions = document.createElement("div");
     actions.classList.add("message-actions");
@@ -45,6 +59,7 @@ const renderMessage = (e) => {
     actions.appendChild(editBut);
     actions.appendChild(deleteBut);
     actions.appendChild(likeBut)
+    // actions.appendChild(likesCount);
 
     messageCard.appendChild(userName);
     messageCard.appendChild(message);
@@ -86,11 +101,11 @@ const fetchMessages = async () => {
 
 
 const sendMessage = async () => {
-    const name = document.getElementById("user").value.trim()
+    const currentUser = localStorage.getItem("username");
     const msg = document.getElementById("msg").value.trim()
 
-    if (!name || !msg) {
-        showError("Name and message are required");
+    if ( !msg ) {
+        showError("Message are required");
         return;
     }
 
@@ -103,7 +118,7 @@ const sendMessage = async () => {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                name,
+                name: currentUser,
                 message: msg
             })
         })
@@ -116,7 +131,6 @@ const sendMessage = async () => {
         }
         document.getElementById("error").textContent = "";
 
-        document.getElementById("user").value = ""
         document.getElementById("msg").value = ""
 
     } catch (err) {
@@ -233,6 +247,44 @@ const deleteMessage = async (id) => {
     }
 };
 
+const likeMessage = async (id) => {
+    const currentUser = localStorage.getItem("username");
+
+    try {
+        const response = await fetch(
+            `${BASE_URL}/messages/${id}/like`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    name: currentUser
+                })
+            }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            showError(data.error);
+            return;
+        }
+
+        fetchMessages();
+
+    } catch {
+        showError("Failed to like message");
+    }
+};
+
+
+const logout = () => {
+    localStorage.removeItem("username");
+
+    window.location.href = "index.html";
+};
+
 const init = () => {
     fetchMessages();
 
@@ -246,6 +298,10 @@ const init = () => {
         document
         .getElementById("clear-allMessages")
         .addEventListener("click", clearChat)
+
+        document
+            .getElementById("logout-button")
+            .addEventListener("click", logout);
 
 };
 
