@@ -175,10 +175,10 @@ ws.onmessage = (event) => {
         case "EDIT_MESSAGE": {
              fetchMessages();
              break;
-}
+        }
 
         case "LIKE_MESSAGE": {
-            console.log("LIKE_MESSAGE");
+            fetchMessages();
             break;
         }
 
@@ -308,8 +308,6 @@ const likeMessage = async (id) => {
             showError(data.error);
             return;
         }
-
-        fetchMessages();
 
     } catch {
         showError("Failed to like message");

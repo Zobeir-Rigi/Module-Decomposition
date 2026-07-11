@@ -150,6 +150,11 @@ app.post("/messages/:id/like", (req, res) => {
         message.likes.push(name);
     }
 
+    broadcast({
+    type: "LIKE_MESSAGE",
+    message
+})
+
     res.status(200).json({
         ...message,
         likesCount: message.likes.length
