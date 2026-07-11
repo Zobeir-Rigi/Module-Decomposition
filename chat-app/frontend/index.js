@@ -17,20 +17,20 @@ const logout = () => {
     window.location.href = "index.html";
 }
 
-const renderMessage = (message) => {
+const renderMessage = (e) => {
     const messages = document.getElementById("messages")
-    console.log(message)
+    console.log(e)
     const messageCard = document.createElement("div");
     messageCard.classList.add("message-card");
 
     const userName = document.createElement("strong")
-    userName.textContent = message.name
+    userName.textContent = e.name
 
     const message = document.createElement("p")
-    message.textContent = message.message
+    message.textContent = e.message
 
     const timestamp = document.createElement("small")
-    timestamp.textContent = new Date(message.timestamp).toLocaleTimeString([], {
+    timestamp.textContent = new Date(e.timestamp).toLocaleTimeString([], {
         hour: "2-digit",
         minute: "2-digit"
     });
@@ -141,16 +141,21 @@ const sendMessage = async () => {
     }
 }
 
-// const ws = new WebSocket(WS_URL);
-// ws.onmessage = (event) => {
-//     const data = JSON.parse(event.data);
+const ws = new WebSocket(WS_URL);
+ws.onmessage = (event) => {
+    const data = JSON.parse(event.data);
 
-//     const empty = document.querySelector(".empty");
-//     if (empty) {
-//         empty.remove();
-//     }
-//     renderMessage(data)
-// };
+    if (data.type === "NEW_MESSAGE") {
+
+        const empty = document.querySelector(".empty");
+
+        if (empty) {
+            empty.remove();
+        }
+
+        renderMessage(data.message);
+    }
+};
 
 const clearChat = async () => {
     try {

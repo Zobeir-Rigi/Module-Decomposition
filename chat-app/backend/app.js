@@ -1,7 +1,6 @@
-// const WebSocket = require("ws");
 const express = require("express");
 const cors = require('cors');
-// const clients = [];
+const clients = [];
 
 const app = express();
 app.use(express.json())
@@ -46,6 +45,11 @@ app.post("/messages", (req, res) => {
     const newMessage = createMessage(name, message)
 
     allMessages.push(newMessage)
+
+    broadcast({
+    type: "NEW_MESSAGE",
+    message: newMessage
+});
 
     res.status(201).json(newMessage);
     // 201 Created : The request succeeded and a new resource was created.
@@ -143,33 +147,48 @@ const findMessageById = (id) => {
    return allMessages.find(message => message.id === id)
 }
 
-app.listen(3000, () => {
-   console.log("server is running")
-})
+// app.listen(3000, () => {
+//    console.log("server is running")
+// })
 
 //webSocket
+const WebSocket = require("ws");
+const http = require("http");
 
-// const http = require("http");
-// const server = http.createServer(app);
+const server = http.createServer(app);
 
-// const PORT = process.env.PORT || 3000;
+const wss = new WebSocket.Server({ server });
 
-// server.listen(PORT, () => {
-//     console.log("server is running");
-// });
+wss.on("connection", (ws) => {
+    console.log("New client connected");
+
+    clients.push(ws)
+
+    broadcast({
+        type: "TEST",
+        message: "Hello from server"
+    });
+    
+
+    ws.on("close", () => {
+        console.log("Client disconnected");
+
+        const index = clients.indexOf(ws);
+
+        if (index !== -1) {
+            clients.splice(index, 1);
+        }
+    });
+});
+
+const broadcast = (data) => {
+    clients.forEach((client) => {
+        client.send(JSON.stringify(data));
+    });
+};
 
 
-// const wss = new WebSocket.Server({ server });
-
-// wss.on("connection", (ws) => {
-//     console.log("New client connected");
-//     clients.push(ws);
-
-//     ws.on("close", () => {
-//         console.log("Client disconnected");
-//         const index = clients.indexOf(ws);
-//         clients.splice(index, 1);
-//     });
-
-// });
+server.listen(3000, () => {
+    console.log("server is running");
+});
 
