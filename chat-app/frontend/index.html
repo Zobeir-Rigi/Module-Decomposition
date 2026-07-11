@@ -2,25 +2,42 @@
 <html>
 
 <head>
-    <title>Chat App</title>
-    <link rel="stylesheet" href="./style.css">
+    <title>Join Chat</title>
 </head>
 
 <body>
-    <h1>Chat App</h1>
-    <div id="send-message">
-        <input id="user" placeholder="Name">
-        <textarea id="msg" placeholder="Mesaage"></textarea>
-        <button id="send-button"></button>
+    <h1>Welcome to Chat App</h1>
+
+    <div id="join-chat">
+        <input id="user" placeholder="Enter your name...">
+        <button id="join-button">Join Chat</button>
     </div>
+    
     <p id="error"></p>
 
-    <div id="messages"></div>
+<script>
+    const joinButton = document.getElementById("join-button");
 
-    <button id="clear-allMessages">
-    </button>
-    
-    <script src="index.js"></script>
+    joinButton.addEventListener("click", () => {
+        const name = document
+            .getElementById("user")
+            .value
+            .trim();
+
+        const error = document.getElementById("error");
+
+        if (!name) {
+            error.textContent = "Please enter your name";
+            return;
+        }
+
+        localStorage.setItem("username", name);
+
+        error.textContent = "";
+        window.location.href = "chat.html";
+        console.log("Saved:", name);
+    });
+</script>
 </body>
 
 </html>
