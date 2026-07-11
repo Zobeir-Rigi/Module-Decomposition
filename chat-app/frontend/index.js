@@ -33,11 +33,18 @@ const renderMessage = (e) => {
     deleteBut.appendChild(deleteImg);
     deleteBut.addEventListener("click",() => deleteMessage(e.id))
 
+    const likeBut = document.createElement("button")
+    const likeImg = document.createElement("img");
+    likeImg.src = "./icons/like.svg"
+    likeBut.appendChild(likeImg);
+    // likeBut.addEventListener("click", () => likeMessage(e.id))
+
     const actions = document.createElement("div");
     actions.classList.add("message-actions");
 
     actions.appendChild(editBut);
     actions.appendChild(deleteBut);
+    actions.appendChild(likeBut)
 
     messageCard.appendChild(userName);
     messageCard.appendChild(message);
