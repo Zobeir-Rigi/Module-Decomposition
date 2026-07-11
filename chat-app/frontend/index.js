@@ -143,58 +143,6 @@ const sendMessage = async () => {
     }
 }
 
-const ws = new WebSocket(WS_URL);
-ws.onmessage = (event) => {
-    const data = JSON.parse(event.data);
-
-    switch (data.type) {
-
-        case "NEW_MESSAGE": {
-            const empty = document.querySelector(".empty");
-
-            if (empty) {
-                empty.remove();
-            }
-
-            renderMessage(data.message);
-            break;
-        }
-
-        case "DELETE_MESSAGE": {
-            const messageCard = document.querySelector(
-                `[data-id="${data.messageId}"]`
-            );
-
-            if (messageCard) {
-                messageCard.remove();
-            }
-
-            break;
-        }
-
-        case "EDIT_MESSAGE": {
-             fetchMessages();
-             break;
-        }
-
-        case "LIKE_MESSAGE": {
-            fetchMessages();
-            break;
-        }
-
-        case "CLEAR_CHAT": {
-            console.log("CLEAR_CHAT");
-            break;
-        }
-
-        default:
-            console.warn(
-                "Unknown websocket event:",
-                data.type
-            );
-    }
-};
-
 const clearChat = async () => {
     try {
         const response = await fetch(`${BASE_URL}/messages`, {
@@ -318,6 +266,53 @@ const showError = (msg) => {
     const errorEl = document.getElementById("error");
     errorEl.textContent = msg;
     errorEl.style.color = "red";
+};
+
+const ws = new WebSocket(WS_URL);
+ws.onmessage = (event) => {
+    const data = JSON.parse(event.data);
+
+    switch (data.type) {
+
+        case "NEW_MESSAGE": {
+            const empty = document.querySelector(".empty");
+
+            if (empty) {
+                empty.remove();
+            }
+
+            renderMessage(data.message);
+            break;
+        }
+
+        case "DELETE_MESSAGE": {
+            const messageCard = document.querySelector(
+                `[data-id="${data.messageId}"]`
+            );
+
+            if (messageCard) {
+                messageCard.remove();
+            }
+
+            break;
+        }
+
+        case "EDIT_MESSAGE": {
+             fetchMessages();
+             break;
+        }
+
+        case "LIKE_MESSAGE": {
+            fetchMessages();
+            break;
+        }
+
+        default:
+            console.warn(
+                "Unknown websocket event:",
+                data.type
+            );
+    }
 };
 
 const init = () => {
