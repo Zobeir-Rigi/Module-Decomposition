@@ -173,9 +173,9 @@ ws.onmessage = (event) => {
         }
 
         case "EDIT_MESSAGE": {
-            console.log("EDIT_MESSAGE");
-            break;
-        }
+             fetchMessages();
+             break;
+}
 
         case "LIKE_MESSAGE": {
             console.log("LIKE_MESSAGE");
@@ -256,8 +256,6 @@ const editMessage = async (messageData) => {
             showError(data.error);
             return;
         }
-
-        fetchMessages();
 
     } catch {
         showError("Failed to update message");

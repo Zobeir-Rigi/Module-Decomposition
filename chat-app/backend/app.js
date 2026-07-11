@@ -109,6 +109,12 @@ app.put("/messages/:id", (req, res) => {
     }
 
     message.message = updatedMessage;
+
+    broadcast({
+    type: "EDIT_MESSAGE",
+    message
+});
+
     res.status(200).json(message);
 
 })
