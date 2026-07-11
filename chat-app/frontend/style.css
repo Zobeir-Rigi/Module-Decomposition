@@ -6,11 +6,25 @@
     margin: 0 auto;
 }
 
-div {
+.message-card {
     display: flex;
     flex-direction: column;
     background-color: white;
     border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 8px;
+}
+
+.message-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.message-actions button {
+    width: auto;
+    height: 30px;
+    padding: 0 10px;
 }
 
 strong {

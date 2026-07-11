@@ -6,7 +6,8 @@ const WS_URL = "ws://localhost:3000";
 const renderMessage = (e) => {
     const messages = document.getElementById("messages")
     console.log(e)
-    const div = document.createElement("div")
+    const messageCard = document.createElement("div");
+    messageCard.classList.add("message-card");
 
     const userName = document.createElement("strong")
     userName.textContent = e.name
@@ -21,20 +22,29 @@ const renderMessage = (e) => {
     });
     //Because each message gets its own Edit button:
     const editBut = document.createElement("button")
-    editBut.textContent = "Edit"
+    const editImg = document.createElement("img");
+    editImg.src = "./icons/edit.svg"
+    editBut.appendChild(editImg);
     editBut.addEventListener("click", () => editMessage(e) )
 
     const deleteBut = document.createElement("button")
-    deleteBut.textContent = "Delete"
+    const deleteImg = document.createElement("img");
+    deleteImg.src = "./icons/delete.svg"
+    deleteBut.appendChild(deleteImg);
     deleteBut.addEventListener("click",() => deleteMessage(e.id))
 
-    div.appendChild(userName)
-    div.appendChild(message)
-    div.appendChild(timestamp)
-    div.appendChild(editBut)
-    div.appendChild(deleteBut)
+    const actions = document.createElement("div");
+    actions.classList.add("message-actions");
 
-    messages.appendChild(div)
+    actions.appendChild(editBut);
+    actions.appendChild(deleteBut);
+
+    messageCard.appendChild(userName);
+    messageCard.appendChild(message);
+    messageCard.appendChild(timestamp);
+    messageCard.appendChild(actions);
+
+    messages.appendChild(messageCard);
 }
 
 const renderEmptyState = () => {
@@ -113,16 +123,16 @@ const showError = (msg) => {
     errorEl.style.color = "red";
 };
 
-const ws = new WebSocket(WS_URL);
-ws.onmessage = (event) => {
-    const data = JSON.parse(event.data);
+// const ws = new WebSocket(WS_URL);
+// ws.onmessage = (event) => {
+//     const data = JSON.parse(event.data);
 
-    const empty = document.querySelector(".empty");
-    if (empty) {
-        empty.remove();
-    }
-    renderMessage(data)
-};
+//     const empty = document.querySelector(".empty");
+//     if (empty) {
+//         empty.remove();
+//     }
+//     renderMessage(data)
+// };
 
 const clearChat = async () => {
     try {
@@ -150,6 +160,10 @@ const clearChat = async () => {
 
 const clearChatBut = document.getElementById("clear-allMessages");
 clearChatBut.addEventListener("click", clearChat);
+
+const clearImg = document.createElement("img")
+    clearImg.src = "./icons/clearTheChat.svg"
+    clearChatBut.appendChild(clearImg)
 
 const editMessage = async (messageData) => {
     const updatedMessage = prompt(
@@ -215,8 +229,11 @@ const deleteMessage = async (id) => {
 const init = () => {
     fetchMessages();
 
-    const button = document.getElementById("send-button");
-    button.addEventListener("click", sendMessage);
+    const sendButton = document.getElementById("send-button");
+    const sendImg = document.createElement("img")
+    sendImg.src = "./icons/send.svg"
+    sendButton.appendChild(sendImg)
+    sendButton.addEventListener("click", sendMessage);
 
 
         document
