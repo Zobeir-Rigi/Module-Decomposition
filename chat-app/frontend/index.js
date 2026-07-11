@@ -2,28 +2,35 @@
 // const WS_URL = "wss://pp3psp4mxrlip4uxvmeb9cmv.hosting.codeyourfuture.io"
 const BASE_URL = "http://localhost:3000"
 const WS_URL = "ws://localhost:3000";
+
 const currentUser = localStorage.getItem("username");
 
 if (!currentUser) {
     window.location.href = "index.html";
 }
 document.getElementById("welcome").textContent =
-    `Welcome, ${currentUser}`;
+    `Welcome, ${currentUser}`
 
-const renderMessage = (e) => {
+const logout = () => {
+    localStorage.removeItem("username");
+
+    window.location.href = "index.html";
+}
+
+const renderMessage = (message) => {
     const messages = document.getElementById("messages")
-    console.log(e)
+    console.log(message)
     const messageCard = document.createElement("div");
     messageCard.classList.add("message-card");
 
     const userName = document.createElement("strong")
-    userName.textContent = e.name
+    userName.textContent = message.name
 
     const message = document.createElement("p")
-    message.textContent = e.message
+    message.textContent = message.message
 
     const timestamp = document.createElement("small")
-    timestamp.textContent = new Date(e.timestamp).toLocaleTimeString([], {
+    timestamp.textContent = new Date(message.timestamp).toLocaleTimeString([], {
         hour: "2-digit",
         minute: "2-digit"
     });
@@ -48,11 +55,8 @@ const renderMessage = (e) => {
     likeBut.append(` ${e.likes.length}`);
     likeBut.addEventListener("click", () => likeMessage(e.id))
 
-
-
     // const likesCount = document.createElement("small");
     // likesCount.textContent = e.likes.length;
-
     const actions = document.createElement("div");
     actions.classList.add("message-actions");
 
@@ -78,7 +82,7 @@ const renderEmptyState = () => {
 
     messages.appendChild(noData);
 }
-
+// API
 const fetchMessages = async () => {
     // const url = `${BASE_URL}/messages`
 
@@ -98,7 +102,6 @@ const fetchMessages = async () => {
         showError("Failed to load messages");
     }
 }
-
 
 const sendMessage = async () => {
     const currentUser = localStorage.getItem("username");
@@ -137,12 +140,6 @@ const sendMessage = async () => {
         showError("Network error");
     }
 }
-
-const showError = (msg) => {
-    const errorEl = document.getElementById("error");
-    errorEl.textContent = msg;
-    errorEl.style.color = "red";
-};
 
 // const ws = new WebSocket(WS_URL);
 // ws.onmessage = (event) => {
@@ -278,11 +275,10 @@ const likeMessage = async (id) => {
     }
 };
 
-
-const logout = () => {
-    localStorage.removeItem("username");
-
-    window.location.href = "index.html";
+const showError = (msg) => {
+    const errorEl = document.getElementById("error");
+    errorEl.textContent = msg;
+    errorEl.style.color = "red";
 };
 
 const init = () => {
