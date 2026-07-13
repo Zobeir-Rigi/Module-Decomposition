@@ -47,9 +47,9 @@ app.post("/messages", (req, res) => {
     allMessages.push(newMessage)
 
     broadcast({
-    type: "NEW_MESSAGE",
-    message: newMessage
-});
+        type: "NEW_MESSAGE",
+        message: newMessage
+    });
 
     res.status(201).json(newMessage);
     // 201 Created : The request succeeded and a new resource was created.
@@ -66,10 +66,10 @@ app.delete("/messages", (req, res) => {
 
 app.delete("/messages/:id", (req, res) => {
     const id = Number(req.params.id);
+    const { name } = req.body || {};
 
     const messageIndex = allMessages.findIndex(
         message => message.id === id
-        
     );
 
     if (messageIndex === -1) {
@@ -78,46 +78,65 @@ app.delete("/messages/:id", (req, res) => {
         });
     }
 
-    const deletedMessage = allMessages.splice(messageIndex, 1)[0];
+    const message = allMessages[messageIndex];
+
+    if (message.name !== name) {
+        return res.status(403).json({
+            error: "You can only delete your own messages"
+        });
+    }
+
+    const deletedMessage =
+        allMessages.splice(messageIndex, 1)[0];
 
     broadcast({
-    type: "DELETE_MESSAGE",
-    messageId: deletedMessage.id
-});
+        type: "DELETE_MESSAGE",
+        messageId: deletedMessage.id
+    });
 
     res.status(200).json(deletedMessage);
 });
 
 app.put("/messages/:id", (req, res) => {
-    const id = Number(req.params.id)
-    const message = findMessageById(id)
+    const id = Number(req.params.id);
+
+    const message = findMessageById(id);
 
     if (!message) {
         return res.status(404).json({
             error: "Message not found"
-        })
+        });
     }
-    const { message: updatedMessage } = req.body || {}
+
+    const {
+        name,
+        message: updatedMessage
+    } = req.body || {};
 
     if (
         typeof updatedMessage !== "string" ||
         !updatedMessage.trim()
     ) {
         return res.status(400).json({
-            error: "Name and message are required"
+            error: "Message is required"
+        });
+    }
+
+    if (message.name !== name) {
+        return res.status(403).json({
+            error: "You can only edit your own messages"
         });
     }
 
     message.message = updatedMessage;
 
     broadcast({
-    type: "EDIT_MESSAGE",
-    message
-});
+        type: "EDIT_MESSAGE",
+        message
+    });
 
     res.status(200).json(message);
-
-})
+});
 
 app.post("/messages/:id/like", (req, res) => {
     const id = Number(req.params.id);
@@ -151,9 +170,9 @@ app.post("/messages/:id/like", (req, res) => {
     }
 
     broadcast({
-    type: "LIKE_MESSAGE",
-    message
-})
+        type: "LIKE_MESSAGE",
+        message
+    })
 
     res.status(200).json({
         ...message,
@@ -161,7 +180,7 @@ app.post("/messages/:id/like", (req, res) => {
     });
 });
 const findMessageById = (id) => {
-   return allMessages.find(message => message.id === id)
+    return allMessages.find(message => message.id === id)
 }
 
 // app.listen(3000, () => {
@@ -185,7 +204,7 @@ wss.on("connection", (ws) => {
         type: "TEST",
         message: "Hello from server"
     });
-    
+
 
     ws.on("close", () => {
         console.log("Client disconnected");

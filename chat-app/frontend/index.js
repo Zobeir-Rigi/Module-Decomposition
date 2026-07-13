@@ -1,7 +1,7 @@
 // const BASE_URL = "https://pp3psp4mxrlip4uxvmeb9cmv.hosting.codeyourfuture.io"
 // const WS_URL = "wss://pp3psp4mxrlip4uxvmeb9cmv.hosting.codeyourfuture.io"
 const BASE_URL = "http://localhost:3000"
-const WS_URL = "ws://localhost:3000";
+const WS_URL = "ws://localhost:3000"
 
 const currentUser = localStorage.getItem("username");
 
@@ -19,7 +19,6 @@ const logout = () => {
 
 const renderMessage = (e) => {
     const messages = document.getElementById("messages")
-    console.log(e)
     const messageCard = document.createElement("div");
     messageCard.classList.add("message-card");
     // How do we find the correct HTML element to remove?from the backend to the correct DOM element.
@@ -41,13 +40,14 @@ const renderMessage = (e) => {
     const editImg = document.createElement("img");
     editImg.src = "./icons/edit.svg"
     editBut.appendChild(editImg);
-    editBut.addEventListener("click", () => editMessage(e) )
+    editBut.addEventListener("click", () => editMessage(e))
 
     const deleteBut = document.createElement("button")
+    deleteBut.classList.add("delete-btn");
     const deleteImg = document.createElement("img");
     deleteImg.src = "./icons/delete.svg"
     deleteBut.appendChild(deleteImg);
-    deleteBut.addEventListener("click",() => deleteMessage(e.id))
+    deleteBut.addEventListener("click", () => deleteMessage(e.id))
 
     const likeBut = document.createElement("button")
     const likeImg = document.createElement("img");
@@ -62,9 +62,12 @@ const renderMessage = (e) => {
     const actions = document.createElement("div");
     actions.classList.add("message-actions");
 
-    actions.appendChild(editBut);
-    actions.appendChild(deleteBut);
-    actions.appendChild(likeBut)
+    if (e.name === currentUser) {
+        actions.appendChild(editBut);
+        actions.appendChild(deleteBut);
+    }
+
+    actions.appendChild(likeBut);
     // actions.appendChild(likesCount);
 
     messageCard.appendChild(userName);
@@ -89,7 +92,7 @@ const fetchMessages = async () => {
     // const url = `${BASE_URL}/messages`
 
     try {
-        const response = await fetch("http://localhost:3000/messages");
+        const response = await fetch(`${BASE_URL}/messages`);
         const data = await response.json()
 
         const messages = document.getElementById("messages")
@@ -109,15 +112,15 @@ const sendMessage = async () => {
     const currentUser = localStorage.getItem("username");
     const msg = document.getElementById("msg").value.trim()
 
-    if ( !msg ) {
+    if (!msg) {
         showError("Message are required");
         return;
     }
 
     // const url = `${BASE_URL}/message`
-    
+
     try {
-        const res = await fetch("http://localhost:3000/messages", {
+        const res = await fetch(`${BASE_URL}/messages`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -162,7 +165,7 @@ const clearChat = async () => {
 
         renderEmptyState();
 
-    } catch {
+    } catch (err) {
         showError(err.message || "Failed to clear chat");
     }
 };
@@ -170,9 +173,9 @@ const clearChat = async () => {
 const clearChatBut = document.getElementById("clear-allMessages");
 clearChatBut.addEventListener("click", clearChat);
 
-const clearImg = document.createElement("img")
-    clearImg.src = "./icons/clearTheChat.svg"
-    clearChatBut.appendChild(clearImg)
+// const clearImg = document.createElement("img")
+// clearImg.src = "./icons/clearTheChat.svg"
+// clearChatBut.appendChild(clearImg)
 
 const editMessage = async (messageData) => {
     const updatedMessage = prompt(
@@ -193,6 +196,7 @@ const editMessage = async (messageData) => {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
+                    name: currentUser,
                     message: updatedMessage
                 })
             }
@@ -215,7 +219,13 @@ const deleteMessage = async (id) => {
         const response = await fetch(
             `${BASE_URL}/messages/${id}`,
             {
-                method: "DELETE"
+                method: "DELETE", headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    name: currentUser
+
+                })
             }
         );
 
@@ -225,8 +235,6 @@ const deleteMessage = async (id) => {
             showError(data.error);
             return;
         }
-//We don't fetch data because we need the data. We fetch again to refresh the UI.
-        fetchMessages();
 
     } catch {
         showError("Failed to delete message");
@@ -269,8 +277,22 @@ const showError = (msg) => {
 };
 
 const ws = new WebSocket(WS_URL);
+ws.onopen = () => {
+    console.log("WebSocket connected");
+};
+
+ws.onerror = (error) => {
+    console.error("WebSocket error:", error);
+};
+
+ws.onclose = () => {
+    console.log("WebSocket closed");
+};
+
 ws.onmessage = (event) => {
     const data = JSON.parse(event.data);
+
+    console.log("WS RECEIVED:", data);
 
     switch (data.type) {
 
@@ -298,8 +320,8 @@ ws.onmessage = (event) => {
         }
 
         case "EDIT_MESSAGE": {
-             fetchMessages();
-             break;
+            fetchMessages();
+            break;
         }
 
         case "LIKE_MESSAGE": {
@@ -325,13 +347,13 @@ const init = () => {
     sendButton.addEventListener("click", sendMessage);
 
 
-        document
+    document
         .getElementById("clear-allMessages")
         .addEventListener("click", clearChat)
 
-        document
-            .getElementById("logout-button")
-            .addEventListener("click", logout);
+    document
+        .getElementById("logout-button")
+        .addEventListener("click", logout);
 
 };
 
