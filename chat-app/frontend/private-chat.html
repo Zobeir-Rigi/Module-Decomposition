@@ -2,24 +2,38 @@
 <html>
 
 <head>
-    <title>Chat App</title>
+    <title>Private Chat</title>
     <link rel="stylesheet" href="./style.css">
 </head>
 
 <body>
-    <h1>Chat App</h1>
+    <h1>Private Chat</h1>
 
     <h2 id="welcome"></h2>
+
+    <div id="private-chat-controls">
+
+        <select id="recipient">
+            <option value="">Select User</option>
+        </select>
+
+    </div>
+
     <div id="send-message">
-        <textarea id="msg" placeholder="Mesaage"></textarea>
+        <textarea
+            id="msg"
+            placeholder="Send a private message"
+        ></textarea>
+
         <button id="send-button"></button>
     </div>
+
     <p id="error"></p>
 
     <div id="messages"></div>
 
-    <button id="clear-allMessages">
-        Clear the chat
+    <button id="public-chat-button">
+        Public Chat
     </button>
 
     <button id="logout-button">
@@ -31,8 +45,7 @@
     <script src="api.js"></script>
     <script src="render.js"></script>
     <script src="websocket.js"></script>
-    <script src="chat.js"></script>
-
+    <script src="private-chat.js"></script>
 </body>
 
 </html>
