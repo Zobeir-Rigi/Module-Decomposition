@@ -5,6 +5,15 @@ A real-time chat application built with **JavaScript**, **Node.js**, **Express**
 Users can communicate in a public chat room, send private messages, edit and delete their messages, react with likes, and receive real-time updates.
 
 ---
+## Live Demo
+
+🔗 Frontend
+
+https://zobeir-rigi-chat-app.hosting.codeyourfuture.io/
+
+🔗 Backend API
+
+https://pp3psp4mxrlip4uxvmeb9cmv.hosting.codeyourfuture.io
 
 ## Features
 
