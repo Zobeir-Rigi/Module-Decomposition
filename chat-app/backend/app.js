@@ -38,7 +38,9 @@ const broadcast = (data) => {
   });
 };
 
-/* PUBLIC CHAT */
+app.get("/", (req, res) => {
+  res.send("Chat App API is running");
+});
 
 app.get("/messages", (req, res) => {
   res.json(allMessages);

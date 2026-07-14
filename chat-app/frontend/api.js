@@ -1,10 +1,5 @@
 // API
 console.log("API LOADED");
-
-app.get("/", (req, res) => {
-  res.send("Chat App API is running");
-});
-
 const fetchMessages = async () => {
     try {
         const response = await fetch(`${BASE_URL}/messages`);
