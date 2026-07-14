@@ -1,49 +1,66 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-
-<head>
+  <head>
     <title>Join Chat</title>
-    <link rel="stylesheet" href="./index.css">
-</head>
+    <link rel="stylesheet" href="./index.css" />
+  </head>
 
-<body>
+  <body>
     <div class="container">
-        <h1>Welcome to Chat App</h1>
+      <h1>Welcome to Chat App</h1>
 
-        <div id="join-chat">
+      <div id="join-chat">
+        <input id="user" placeholder="Enter your name..." />
 
-            <input id="user" placeholder="Enter your name...">
-
-            <button id="join-button">Join Chat</button>
-
-        </div>
-        <p id="error"></p>
-
+        <button id="join-button">Join Chat</button>
+      </div>
+      <p id="error"></p>
     </div>
-
     <script>
-        const joinButton = document.getElementById("join-button");
+      const joinButton = document.getElementById("join-button");
 
-        joinButton.addEventListener("click", () => {
-            const name = document
-                .getElementById("user")
-                .value
-                .trim();
+      const usernameInput = document.getElementById("user");
 
-            const error = document.getElementById("error");
+      usernameInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          joinButton.click();
+        }
+      });
 
-            if (!name) {
-                error.textContent = "Please enter your name";
-                return;
-            }
+      joinButton.addEventListener("click", async () => {
+        const name = usernameInput.value.trim();
 
-            localStorage.setItem("username", name);
+        const error = document.getElementById("error");
 
-            error.textContent = "";
-            window.location.href = "chat.html";
-            console.log("Saved:", name);
-        });
+        error.textContent = "";
+
+        if (!name) {
+          error.textContent = "Please enter your name";
+          return;
+        }
+
+        try {
+          const response = await fetch("http://localhost:3000/users");
+
+          const users = await response.json();
+
+          const usernameExists = users.some(
+            (user) => user.toLowerCase() === name.toLowerCase(),
+          );
+
+          if (usernameExists) {
+            error.textContent = "Username already exists";
+            return;
+          }
+
+          localStorage.setItem("username", name);
+
+          window.location.href = "chat.html";
+        } catch {
+          error.textContent = "Failed to connect to server";
+        }
+      });
     </script>
-</body>
-
+  </body>
 </html>

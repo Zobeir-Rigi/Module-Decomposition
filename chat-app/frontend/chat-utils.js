@@ -42,3 +42,28 @@ const setupSendButton = (handler) => {
     handler
   );
 };
+
+const setupEnterToSend = (
+  inputId,
+  handler
+) => {
+  const input =
+    document.getElementById(inputId);
+
+  if (!input) {
+    return;
+  }
+
+  input.addEventListener(
+    "keydown",
+    (e) => {
+      if (
+        e.key === "Enter" &&
+        !e.shiftKey
+      ) {
+        e.preventDefault();
+        handler();
+      }
+    }
+  );
+};

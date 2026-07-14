@@ -140,6 +140,7 @@ const init = () => {
   fetchUsers();
 
   setupSendButton(sendPrivateMessage);
+  setupEnterToSend("msg", sendPrivateMessage);
 
   document.getElementById("logout-button").addEventListener("click", logout);
 
