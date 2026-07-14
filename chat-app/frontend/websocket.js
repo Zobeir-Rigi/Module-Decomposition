@@ -1,6 +1,12 @@
 const ws = new WebSocket(WS_URL);
+
 ws.onopen = () => {
-  console.log("WebSocket connected");
+  ws.send(
+    JSON.stringify({
+      type: "REGISTER",
+      username: currentUser,
+    }),
+  );
 };
 
 ws.onerror = (error) => {
@@ -13,8 +19,6 @@ ws.onclose = () => {
 
 ws.onmessage = (event) => {
   const data = JSON.parse(event.data);
-  
-  console.log("WS RECEIVED:", data);
 
   switch (data.type) {
     case "NEW_MESSAGE": {
@@ -27,10 +31,7 @@ ws.onmessage = (event) => {
       renderMessage(data.message);
       break;
     }
-    case "TEST": {
-      console.log(data.message);
-      break;
-    }
+
     case "DELETE_MESSAGE": {
       const messageCard = document.querySelector(
         `[data-id="${data.messageId}"]`,
@@ -46,6 +47,31 @@ ws.onmessage = (event) => {
     case "EDIT_MESSAGE":
     case "LIKE_MESSAGE": {
       fetchMessages();
+      break;
+    }
+
+    case "PRIVATE_MESSAGE": {
+      if (typeof fetchPrivateMessages === "function") {
+        const recipient = document.getElementById("recipient")?.value;
+
+        if (recipient) {
+          fetchPrivateMessages(recipient);
+        }
+      }
+
+      break;
+    }
+
+    case "USERS_UPDATED": {
+      if (typeof renderUsers === "function") {
+        renderUsers(data.users);
+      }
+
+      break;
+    }
+
+    case "TEST": {
+      console.log(data.message);
       break;
     }
 

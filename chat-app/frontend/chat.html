@@ -1,30 +1,26 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-
-<head>
+  <head>
     <title>Chat App</title>
-    <link rel="stylesheet" href="./style.css">
-</head>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
 
-<body>
+  <body>
     <h1>Chat App</h1>
 
     <h2 id="welcome"></h2>
     <div id="send-message">
-        <textarea id="msg" placeholder="Mesaage"></textarea>
-        <button id="send-button"></button>
+      <textarea id="msg" placeholder="Mesaage"></textarea>
+      <button id="send-button"></button>
     </div>
     <p id="error"></p>
 
     <div id="messages"></div>
+    <button id="private-chat-button">Private Chat</button>
 
-    <button id="clear-allMessages">
-        Clear the chat
-    </button>
+    <button id="clear-allMessages">Clear the chat</button>
 
-    <button id="logout-button">
-        Leave Chat
-    </button>
+    <button id="logout-button">Leave Chat</button>
 
     <script src="config.js"></script>
     <script src="chat-utils.js"></script>
@@ -32,7 +28,5 @@
     <script src="render.js"></script>
     <script src="websocket.js"></script>
     <script src="chat.js"></script>
-
-</body>
-
+  </body>
 </html>

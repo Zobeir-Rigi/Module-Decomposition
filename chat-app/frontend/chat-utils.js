@@ -18,3 +18,27 @@ const logout = () => {
 
     window.location.href = "index.html";
 }
+
+const setupSendButton = (handler) => {
+  const sendButton =
+    document.getElementById("send-button");
+
+  if (!sendButton) {
+    return;
+  }
+
+  sendButton.innerHTML = "";
+
+  const sendImg =
+    document.createElement("img");
+
+  sendImg.src = "./icons/send.svg";
+  sendImg.alt = "Send";
+
+  sendButton.appendChild(sendImg);
+
+  sendButton.addEventListener(
+    "click",
+    handler
+  );
+};

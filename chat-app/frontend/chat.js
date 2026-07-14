@@ -3,15 +3,17 @@ if (!currentUser) {
 }
 document.getElementById("welcome").textContent = `Welcome, ${currentUser}`;
 
+document
+  .getElementById("private-chat-button")
+  .addEventListener("click", () => {
+    window.location.href = "private-chat.html";
+  });
+
 
 const init = () => {
   fetchMessages();
 
-  const sendButton = document.getElementById("send-button");
-  const sendImg = document.createElement("img");
-  sendImg.src = "./icons/send.svg";
-  sendButton.appendChild(sendImg);
-  sendButton.addEventListener("click", sendMessage);
+setupSendButton(sendMessage);
 
   document
     .getElementById("clear-allMessages")

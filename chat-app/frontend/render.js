@@ -12,7 +12,7 @@ const renderMessage = (e) => {
   message.textContent = e.message;
 
   const timestamp = document.createElement("small");
-  timestamp.textContent = formatTime(e.timestamp)
+  timestamp.textContent = formatTime(e.timestamp);
 
   const editBut = document.createElement("button");
   const editImg = document.createElement("img");
