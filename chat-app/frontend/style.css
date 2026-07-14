@@ -151,3 +151,183 @@ img {
     background-color: #b91c1c !important;
 }
 
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f7fa;
+    margin: 0;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+/* HEADER */
+
+.header {
+    max-width: 900px;
+    margin: 0 auto 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+#welcome {
+    margin: 0;
+    color: #333;
+}
+
+.header-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+/* CHAT INPUT */
+
+#send-message {
+    max-width: 900px;
+    margin: 20px auto;
+    display: flex;
+    gap: 10px;
+    background-color: white;
+    padding: 15px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+textarea {
+    flex: 1;
+    min-height: 55px;
+    resize: none;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 14px;
+}
+
+textarea:focus {
+    outline: none;
+    border-color: #3b82f6;
+}
+
+/* BUTTONS */
+
+button {
+    border: none;
+    border-radius: 8px;
+    background-color: #3b82f6;
+    color: white;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+button:hover {
+    background-color: #2563eb;
+}
+
+#send-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 50px;
+}
+
+img {
+    width: 18px;
+    height: 18px;
+}
+
+/* MESSAGES */
+
+#messages {
+    max-width: 900px;
+    margin: 20px auto;
+    background-color: white;
+    padding: 15px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+    min-height: 300px;
+    max-height: 600px;
+    overflow-y: auto;
+}
+
+.message-card {
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    padding: 12px;
+    margin-bottom: 12px;
+    display: flex;
+    flex-direction: column;
+}
+
+.message-card strong {
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.message-card p {
+    margin: 5px 0;
+    word-break: break-word;
+}
+
+.message-card small {
+    align-self: flex-end;
+    color: #777;
+    font-size: 12px;
+}
+
+/* ACTION BUTTONS */
+
+.message-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.message-actions button {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 8px;
+    border-radius: 6px;
+}
+
+.delete-btn {
+    background-color: #dc2626 !important;
+}
+
+.delete-btn:hover {
+    background-color: #b91c1c !important;
+}
+
+/* STATES */
+
+.empty {
+    text-align: center;
+    color: #777;
+}
+
+#error {
+    text-align: center;
+    color: red;
+    min-height: 20px;
+}
+
+.header-actions select {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    min-width: 150px;
+    background: white;
+}

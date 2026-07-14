@@ -9,15 +9,24 @@
 <body>
     <h1>Private Chat</h1>
 
+<div class="header">
     <h2 id="welcome"></h2>
 
-    <div id="private-chat-controls">
-
+    <div class="header-actions">
         <select id="recipient">
             <option value="">Select User</option>
         </select>
 
+        <button id="public-chat-button">
+            Public Chat
+        </button>
+
+        <button id="logout-button">
+            Leave Chat
+        </button>
     </div>
+</div>
+`
 
     <div id="send-message">
         <textarea
@@ -32,13 +41,9 @@
 
     <div id="messages"></div>
 
-    <button id="public-chat-button">
-        Public Chat
-    </button>
 
-    <button id="logout-button">
-        Leave Chat
-    </button>
+
+  
 
     <script src="config.js"></script>
     <script src="chat-utils.js"></script>
