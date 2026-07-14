@@ -97,7 +97,7 @@ chat-app/
 ### Clone the repository
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/Zobeir-Rigi/Module-Decomposition/tree/chat-app
 cd chat-app
 ```
 
