@@ -1,5 +1,5 @@
 // Production
-const BASE_URL = "https://pp3psp4mxrlip4uxvmeb9cmv.hosting.codeyourfuture.io";
+const BASE_URL = "https://zobeir_rigi_chat_app.trainees.hosting.cyf.academy/";
 const WS_URL = "wss://pp3psp4mxrlip4uxvmeb9cmv.hosting.codeyourfuture.io";
 
 // Local development
