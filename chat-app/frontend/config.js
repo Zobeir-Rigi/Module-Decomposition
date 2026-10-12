@@ -1,5 +1,5 @@
 // Production
-const BASE_URL = "https://zobeir_rigi_chat_app.trainees.hosting.cyf.academy";
+const BASE_URL = "https://zobeir-rigii-chat-app.trainees.hosting.cyf.academy";
 const WS_URL = "wss://zobeir_rigi_chat_app.trainees.hosting.cyf.academy";
 
 // Local development
