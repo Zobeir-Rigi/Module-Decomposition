@@ -9,11 +9,11 @@ Users can communicate in a public chat room, send private messages, edit and del
 
 🔗 Frontend
 
-https://zobeir-rigi-chat-app.hosting.codeyourfuture.io/
+https://zobeir-rigi-chat-app.trainees.hosting.cyf.academy/
 
 🔗 Backend API
 
-https://pp3psp4mxrlip4uxvmeb9cmv.hosting.codeyourfuture.io
+https://zobeir-rigii-chat-app.trainees.hosting.cyf.academy/
 
 ## Features
 
